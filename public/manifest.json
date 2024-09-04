@@ -1,0 +1,8 @@
+{
+  "name": "inv",
+  "short_name": "inv",
+  "lang": "en-US",
+  "start_url": "/",
+  "display": "standalone",
+  "scope": "/"
+}
