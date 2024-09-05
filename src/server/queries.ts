@@ -1,51 +1,49 @@
 'use server'
 
+import { type Note } from '@prisma/client'
+
 import { db } from './db'
 
-export async function getInventory(id: string) {
+export async function getNote(id: string) {
   try {
     const note = await db.note.findFirstOrThrow({
       where: {
         id,
       },
     })
-    const inventory = note.list.map(item => {
-      const [name, count] = item.split('\t')
-      return { name: name ?? '', count: Number(count ?? 0) }
-    })
-    return inventory
+    return note
   } catch (error) {
     console.error(error)
     return null
   }
 }
 
-export async function saveInventory(note: {
-  id?: string
-  text?: string
-  title?: string
-  body?: string
-  author: string
-}) {
-  const text = note.text ?? 'untitled\nbody'
-  const title = note.title ?? 'untitled'
-
+async function saveNote(note: Note) {
   const newNote = {
-    text,
-    title,
-    body: note.body ?? 'body',
-    author: note.author,
+    ...note,
+    body: note.body,
   }
-
   try {
-    return await db.note.upsert({
+    return await db.note.update({
       where: {
-        id: note.id ?? '',
+        id: process.env.INVENTORY_ID!,
       },
-      update: newNote,
-      create: newNote,
+      data: newNote,
     })
   } catch (error) {
     console.log(error)
   }
+}
+
+export async function saveInventory(
+  inventory: { name: string; count: number }[],
+  note: Note
+) {
+  const body = inventory.map(item => `${item.name}\t${item.count}`).join('\n')
+  return await saveNote({
+    ...note,
+    body,
+    text: `${note?.title ?? ''}\n\n${body}`,
+    list: inventory.map(item => `${item.name}\t${item.count}`),
+  })
 }
