@@ -26,7 +26,19 @@ export default function Inventory({
     <ul className='divide-y divide-cb-dusty-blue'>
       {inventory.map((item, index) => (
         <li key={index} className='flex items-center py-4 first:pt-0 last:pb-0'>
-          <span className='grow'>{item.name}</span>
+          <span className='grow'>
+            <input
+              type='text'
+              value={item.name}
+              className='bg-cb-dusty-blue text-cb-white'
+              onChange={e => {
+                const newInventory = inventory.map(i =>
+                  i.name === item.name ? { ...i, name: e.target.value } : i
+                )
+                setInventory(newInventory)
+              }}
+            />
+          </span>
           <div className='flex overflow-hidden rounded-lg border border-cb-white/50'>
             <button
               className='bg-cb-dusty-blue p-2 text-cb-yellow hover:bg-cb-dusty-blue/75'
