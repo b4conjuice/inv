@@ -27,19 +27,46 @@ export default function Inventory({
       {inventory.map((item, index) => (
         <li key={index} className='flex items-center py-4 first:pt-0 last:pb-0'>
           <span className='grow'>{item.name}</span>
-          <input
-            className='bg-cobalt'
-            type='number'
-            value={item.count}
-            onChange={e => {
-              const newInventory = inventory.map(i =>
-                i.name === item.name
-                  ? { ...i, count: Number(e.target.value) }
-                  : i
-              )
-              setInventory(newInventory)
-            }}
-          />
+          <div className='flex overflow-hidden rounded-lg border border-cb-white/50'>
+            <button
+              className='bg-cb-dusty-blue p-2 text-cb-yellow hover:bg-cb-dusty-blue/75'
+              type='button'
+              onClick={() => {
+                const newInventory = inventory.map(i =>
+                  i.name === item.name ? { ...i, count: item.count - 1 } : i
+                )
+                setInventory(newInventory)
+              }}
+            >
+              -
+            </button>
+            <input
+              className='w-20 border-none bg-cb-blue text-center'
+              type='number'
+              value={item.count}
+              step={5}
+              onChange={e => {
+                const newInventory = inventory.map(i =>
+                  i.name === item.name
+                    ? { ...i, count: Number(e.target.value) }
+                    : i
+                )
+                setInventory(newInventory)
+              }}
+            />
+            <button
+              className='bg-cb-dusty-blue p-2 text-cb-yellow hover:bg-cb-dusty-blue/75'
+              type='button'
+              onClick={() => {
+                const newInventory = inventory.map(i =>
+                  i.name === item.name ? { ...i, count: item.count + 1 } : i
+                )
+                setInventory(newInventory)
+              }}
+            >
+              +
+            </button>
+          </div>
         </li>
       ))}
     </ul>
