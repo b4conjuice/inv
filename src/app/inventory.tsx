@@ -77,7 +77,7 @@ export default function Inventory({
                 type='button'
                 onClick={() => {
                   const newInventory = inventory.map(i =>
-                    i.name === item.name ? { ...i, count: item.count - 1 } : i
+                    i.name === item.name ? { ...i, count: item.count + 1 } : i
                   )
                   setInventory(newInventory)
                 }}
