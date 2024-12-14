@@ -1,7 +1,7 @@
 import { unstable_noStore as noStore } from 'next/cache'
 
 import Inventory from './inventory'
-import { Main, Title } from '@/components/ui'
+import { Main } from '@/components/ui'
 import { getNote } from '@/server/queries'
 
 export default async function Home() {
@@ -13,9 +13,8 @@ export default async function Home() {
       return { name: name ?? '', count: Number(count ?? 0) }
     }) ?? []
   return (
-    <Main className='flex flex-col px-4 pt-4'>
+    <Main className='flex flex-col px-4'>
       <div className='flex flex-grow flex-col space-y-4'>
-        <Title>inv</Title>
         {note && <Inventory inventory={inventory} note={note} />}
       </div>
     </Main>

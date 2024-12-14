@@ -2,6 +2,8 @@ import type { Viewport } from 'next'
 
 import '@/styles/globals.css'
 
+import { Title } from '@/components/ui'
+
 const DEFAULT_TITLE = 'inv'
 
 export const metadata = {
@@ -27,7 +29,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <div className='bg-cb-dark-blue text-cb-white flex min-h-screen flex-col'>
+        <div className='flex min-h-screen flex-col bg-cb-dark-blue text-cb-white'>
+          <div className='container mx-auto mb-4 flex w-full max-w-screen-md items-center px-4 pt-4 md:px-0'>
+            <Title>inv</Title>
+          </div>
           {children}
         </div>
       </body>
