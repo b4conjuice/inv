@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react'
 import { useDebounce } from '@uidotdev/usehooks'
 import { type Note } from '@prisma/client'
-import { PlusIcon } from '@heroicons/react/20/solid'
+import { PlusIcon, TrashIcon, XMarkIcon } from '@heroicons/react/20/solid'
 
 import { saveInventory } from '@/server/queries'
 import { Footer, FooterListItem } from '@/components/ui'
+
+type Mode = 'default' | 'delete'
 
 export default function Inventory({
   inventory: initialInventory,
@@ -16,6 +18,7 @@ export default function Inventory({
   note: Note
 }) {
   const [inventory, setInventory] = useState(initialInventory)
+  const [mode, setMode] = useState<Mode>('default')
   const debouncedInventory = useDebounce(inventory, 500)
   useEffect(() => {
     async function updateInventory() {
@@ -45,46 +48,59 @@ export default function Inventory({
                 }}
               />
             </span>
-            <div className='flex overflow-hidden rounded-lg border border-cb-white/50'>
+            {mode === 'default' ? (
+              <div className='flex overflow-hidden rounded-lg border border-cb-white/50'>
+                <button
+                  className='bg-cb-dusty-blue p-2 text-cb-yellow hover:bg-cb-dusty-blue/75'
+                  type='button'
+                  onClick={() => {
+                    const newInventory = inventory.map(i =>
+                      i.name === item.name ? { ...i, count: item.count - 1 } : i
+                    )
+                    setInventory(newInventory)
+                  }}
+                >
+                  -
+                </button>
+                <input
+                  className='w-20 border-none bg-cb-blue text-center'
+                  type='number'
+                  value={item.count}
+                  step={5}
+                  onChange={e => {
+                    const newInventory = inventory.map(i =>
+                      i.name === item.name
+                        ? { ...i, count: Number(e.target.value) }
+                        : i
+                    )
+                    setInventory(newInventory)
+                  }}
+                />
+                <button
+                  className='bg-cb-dusty-blue p-2 text-cb-yellow hover:bg-cb-dusty-blue/75'
+                  type='button'
+                  onClick={() => {
+                    const newInventory = inventory.map(i =>
+                      i.name === item.name ? { ...i, count: item.count + 1 } : i
+                    )
+                    setInventory(newInventory)
+                  }}
+                >
+                  +
+                </button>
+              </div>
+            ) : (
               <button
-                className='bg-cb-dusty-blue p-2 text-cb-yellow hover:bg-cb-dusty-blue/75'
-                type='button'
                 onClick={() => {
-                  const newInventory = inventory.map(i =>
-                    i.name === item.name ? { ...i, count: item.count - 1 } : i
-                  )
+                  // delete item by index
+                  const newInventory = [...inventory]
+                  newInventory.splice(index, 1)
                   setInventory(newInventory)
                 }}
               >
-                -
+                <TrashIcon className='h-6 w-6 text-red-700' />
               </button>
-              <input
-                className='w-20 border-none bg-cb-blue text-center'
-                type='number'
-                value={item.count}
-                step={5}
-                onChange={e => {
-                  const newInventory = inventory.map(i =>
-                    i.name === item.name
-                      ? { ...i, count: Number(e.target.value) }
-                      : i
-                  )
-                  setInventory(newInventory)
-                }}
-              />
-              <button
-                className='bg-cb-dusty-blue p-2 text-cb-yellow hover:bg-cb-dusty-blue/75'
-                type='button'
-                onClick={() => {
-                  const newInventory = inventory.map(i =>
-                    i.name === item.name ? { ...i, count: item.count + 1 } : i
-                  )
-                  setInventory(newInventory)
-                }}
-              >
-                +
-              </button>
-            </div>
+            )}
           </li>
         ))}
       </ul>
@@ -96,6 +112,17 @@ export default function Inventory({
           }}
         >
           <PlusIcon className='h-6 w-6' />
+        </FooterListItem>
+        <FooterListItem
+          onClick={() => {
+            setMode(mode === 'delete' ? 'default' : 'delete')
+          }}
+        >
+          {mode === 'default' ? (
+            <TrashIcon className='h-6 w-6' />
+          ) : (
+            <XMarkIcon className='h-6 w-6' />
+          )}
         </FooterListItem>
       </Footer>
     </>
