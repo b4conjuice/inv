@@ -33,13 +33,13 @@ export default function Inventory({
         {inventory.map((item, index) => (
           <li
             key={index}
-            className='flex items-center py-4 first:pt-0 last:pb-0'
+            className='flex items-center space-x-4 py-4 first:pt-0 last:pb-0'
           >
             <span className='grow'>
               <input
                 type='text'
                 value={item.name}
-                className='bg-cb-dusty-blue text-cb-white'
+                className='w-full bg-cb-dusty-blue text-cb-white'
                 onChange={e => {
                   const newInventory = inventory.map(i =>
                     i.name === item.name ? { ...i, name: e.target.value } : i
