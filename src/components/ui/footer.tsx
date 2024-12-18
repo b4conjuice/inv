@@ -13,10 +13,12 @@ export default function Footer({
   backgroundClassName?: string
 }) {
   return (
-    <footer className={classNames('sticky bottom-0 w-full pb-4', className)}>
+    <footer
+      className={classNames('sticky bottom-0 w-full rounded pb-4', className)}
+    >
       <ul
         className={classNames(
-          'flex items-center divide-x divide-cb-white rounded-lg',
+          'flex items-center divide-x divide-[#6b7280] rounded-lg border border-[#6b7280]',
           colorClassName ?? 'text-cb-yellow',
           backgroundClassName ?? 'bg-cb-dusty-blue'
         )}
